@@ -1,21 +1,25 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/loginpage';
+import { test } from '../fixtures/test';
 import { loginData } from '../test-data/loginData';
+
+test.beforeEach(async ({ loginPage }) => {
+    await loginPage.open();
+});
+
+test.afterEach(async () => {
+    console.log('Test completed');
+});
 
 for (const data of loginData) {
 
-    test(`Login Test - ${data.testCase}`, async ({ page }) => {
-
-        const loginPage = new LoginPage(page);
-
-        await loginPage.navigate('https://www.saucedemo.com/');
+    test(`Login Test - ${data.testCase}`, async ({ loginPage, productsPage }) => {
 
         await loginPage.login(data.username, data.password);
 
         if (data.testCase === 'Valid Login') {
-            await expect(page).toHaveURL(/inventory/);
+            await loginPage.verifyLoginSuccess();
+            await productsPage.verifyProductsPage();
         } else {
-            await expect(page.locator('[data-test="error"]')).toBeVisible();
+            await loginPage.verifyLoginError();
         }
     });
 }

@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
 
 export class LoginPage extends BasePage {
@@ -8,7 +8,6 @@ export class LoginPage extends BasePage {
     readonly loginButton: Locator;
 
     constructor(page: Page) {
-
         super(page);
 
         this.username = page.locator('#user-name');
@@ -16,10 +15,23 @@ export class LoginPage extends BasePage {
         this.loginButton = page.locator('#login-button');
     }
 
-    async login(username: string, password: string) {
+    async open() {
+        await this.navigate('https://www.saucedemo.com/');
+    }
 
+    async login(username: string, password: string) {
         await this.enterText(this.username, username);
         await this.enterText(this.password, password);
         await this.click(this.loginButton);
+    }
+
+    async verifyLoginSuccess() {
+        await this.page.waitForURL(/inventory/);
+    }
+
+    async verifyLoginError() {
+        await expect(
+            this.page.locator('[data-test="error"]')
+        ).toBeVisible();
     }
 }
