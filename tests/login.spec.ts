@@ -11,13 +11,14 @@ test.afterEach(async () => {
 
 for (const data of loginData) {
 
-    test(`Login Test - ${data.testCase}`, async ({ loginPage, productsPage }) => {
+    test(`Login Test - ${data.testCase}`, async ({ loginPage, productsPage, dashboardPage }) => {
 
         await loginPage.login(data.username, data.password);
 
         if (data.testCase === 'Valid Login') {
             await loginPage.verifyLoginSuccess();
             await productsPage.verifyProductsPage();
+            await dashboardPage.verifyDashboard();
         } else {
             await loginPage.verifyLoginError();
         }

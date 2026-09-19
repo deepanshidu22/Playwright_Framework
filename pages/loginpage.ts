@@ -1,3 +1,4 @@
+
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
 
@@ -16,7 +17,7 @@ export class LoginPage extends BasePage {
     }
 
     async open() {
-        await this.navigate('https://www.saucedemo.com/');
+        await this.page.goto('/');
     }
 
     async login(username: string, password: string) {
